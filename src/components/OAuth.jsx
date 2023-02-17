@@ -39,7 +39,8 @@ export default function OAuth() {
   }
     
   return (
-    <button type='button' 
+    <button 
+    type='button' 
     onClick={onGoogleClick} 
     className='flex
     items-center
