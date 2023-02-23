@@ -4,7 +4,7 @@ import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
 import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
@@ -22,21 +22,20 @@ export default function SignIn() {
     }));
   }
 
-  async function onSubmit(e){
-    e.preventDefault()
+  async function onSubmit(e) {
+    e.preventDefault();
     try {
       const auth = getAuth();
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
         password
-        )
-        if (userCredential.user){
-          navigate("/");
-        }
+      );
+      if (userCredential.user) {
+        navigate("/");
+      }
     } catch (error) {
-      toast.error("Bad user credentials")
-      
+      toast.error("Bad user credentials");
     }
   }
   return (
@@ -44,9 +43,9 @@ export default function SignIn() {
       <h1 className="text-3xl text-center mt-6 font-bold">Sign In</h1>
       <div
         className="flex justify-center flex-wrap
-          items-center px-6 py-12 max-w-6xl mx-auto border-gray-300
-          rounded">
-      
+          items-center px-6 py-12 max-w-6xl mx-auto
+          "
+      >
         <div className="md:-[67%] lg:w-[50%] mb-12 md:mb-6">
           <img
             src="https://images.unsplash.com/flagged/photo-1564767609342-620cb19b2357?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=773&q=80"
@@ -113,7 +112,7 @@ export default function SignIn() {
                 </Link>
               </p>
             </div>
-            
+
             <button
               className="w-full bg-blue-600 text-white
           px-7 py-3
@@ -126,7 +125,7 @@ export default function SignIn() {
             >
               Sign in
             </button>
-           
+
             <div
               className="flex items-center 
             my-4 before:border-t 
@@ -136,15 +135,15 @@ export default function SignIn() {
            after:border-gray-300"
             >
               <p
-            className="text-center
+                className="text-center
             font-semibold mx-4"
-          >
-            OR
-          </p>
-          </div>
-          <OAuth />
-        </form>
-        </div> 
+              >
+                OR
+              </p>
+            </div>
+            <OAuth />
+          </form>
+        </div>
       </div>
     </section>
   );

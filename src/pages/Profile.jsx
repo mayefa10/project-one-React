@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { db } from "../firebase";
 import { doc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import { FcHome } from "react-icons/fc";
+
 export default function Profile() {
   const auth = getAuth();
   const navigate = useNavigate();
