@@ -1,15 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getAuth, updateCurrentUser, updateProfile } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { db } from "../firebase";
-import { doc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  orderBy,
+  query,
+  QueryOrderByConstraint,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { FcHome } from "react-icons/fc";
+import ListingItem from "../components/ListingItem";
 
 export default function Profile() {
   const auth = getAuth();
   const navigate = useNavigate();
   const [changeDetail, setChangeDetail] = useState(false);
+  const [listings, setListings] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     name: auth.currentUser.displayName,
     email: auth.currentUser.email,
@@ -46,6 +60,27 @@ export default function Profile() {
       toast.error("Could not update the profile detail");
     }
   }
+  useEffect(() => {
+    async function fetchUserListings() {
+      const listingRef = collection(db, "listings");
+      const q = query(
+        listingRef,
+        where("userRef", "==", auth.currentUser.uid),
+        orderBy("timestamp", "desc")
+      );
+      const querySnap = await getDocs(q);
+      let listings = [];
+      querySnap.forEach((doc) => {
+        return listings.push({
+          id: doc.id,
+          data: doc.data(),
+        });
+      });
+      setListings(listings);
+      setLoading(false);
+    }
+    //fetchUserListings();
+  }, [auth.currentUser.uid]);
   return (
     <>
       <section
@@ -55,7 +90,7 @@ export default function Profile() {
         <h1 className="text-3xl text-center mt-6 font-bold">My profile</h1>
 
         <div className="w-full md:w-[50%] mt-6 px-3">
-          <form >
+          <form>
             {/*Name Input */}
 
             <input
@@ -121,16 +156,43 @@ export default function Profile() {
            duration-150 ease-in-out 
            hover:shadow-lg active:bg-blue-800"
           >
-            <Link to="/create-listing"
-            className="flex justify-center
-            items-center">
-              <FcHome className="mr-2 text-3xl bg-red-200
-              rounded-full p-1 border-2" />
+            <Link
+              to="/create-listing"
+              className="flex justify-center
+            items-center"
+            >
+              <FcHome
+                className="mr-2 text-3xl bg-red-200
+              rounded-full p-1 border-2"
+              />
               Sell or rent your home
             </Link>
           </button>
         </div>
       </section>
+      <div className="max-w-6xl px-3 mt-6 mx-auto">
+        {!loading && listings.length > 0 && (
+          <>
+            <h2
+              className="
+            text-2X1 text-center 
+            font-semibold"
+            >
+              My Listings
+            </h2>
+            <ul className="">
+              {listings.map((listing) => (
+                <ListingItem
+                  key={listing.id}
+                  id={listing.id}
+                  listing={listing.data}
+                />
+              ))}
+              ;
+            </ul>
+          </>
+        )}
+      </div>
     </>
   );
 }
