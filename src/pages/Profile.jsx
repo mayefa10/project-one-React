@@ -79,7 +79,7 @@ export default function Profile() {
       setListings(listings);
       setLoading(false);
     }
-    //fetchUserListings();
+    fetchUserListings();
   }, [auth.currentUser.uid]);
   return (
     <>
@@ -176,11 +176,15 @@ export default function Profile() {
             <h2
               className="
             text-2X1 text-center 
-            font-semibold"
+            font-semibold mb-6"
             >
               My Listings
             </h2>
-            <ul className="">
+            <ul className="sm:grid sm:grid-cols-2
+            lg:grid-cols-3
+            xl:grid-col-4
+            2xl-grid-cols-5
+            mb-6">
               {listings.map((listing) => (
                 <ListingItem
                   key={listing.id}
@@ -188,7 +192,6 @@ export default function Profile() {
                   listing={listing.data}
                 />
               ))}
-              ;
             </ul>
           </>
         )}
