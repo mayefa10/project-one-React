@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { db } from "../firebase";
 import {
   collection,
+  deleteDoc,
   doc,
   getDocs,
   orderBy,
@@ -81,6 +82,19 @@ export default function Profile() {
     }
     fetchUserListings();
   }, [auth.currentUser.uid]);
+  async function onDelete(listingId){
+    if(window.confirm("Are you sure you want to delete?")){
+      await deleteDoc(doc(db, "listings", listingId))
+      const updateListings = listings.filter(
+        (listing) => listing.id !== listingId
+      );
+      setListings(updateListings);
+      toast.success("Successfully deleted the listing");
+    }
+  }
+  function onEdit(listingId){
+    navigate(`/edit-listing/${listingId}`);
+  }
   return (
     <>
       <section
@@ -190,6 +204,8 @@ export default function Profile() {
                   key={listing.id}
                   id={listing.id}
                   listing={listing.data}
+                  onDelete = {()=> onDelete(listing.id)}
+                  onEdit = {()=> onEdit(listing.id)}
                 />
               ))}
             </ul>
