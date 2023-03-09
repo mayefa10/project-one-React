@@ -169,7 +169,7 @@ export default function Listing() {
             />
             <Marker position={[listing.geolocation.lat, listing.geolocation.lng]}>
               <Popup>
-                A pretty CSS3 popup. <br /> Easily customizable.
+                {listing.address}
               </Popup>
             </Marker>
           </MapContainer>
